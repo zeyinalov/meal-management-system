@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"  # Expose Flask app on port 5000
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - .:/app  # Mount local code into the container for easy development
+    container_name: web_container  # Specify container name
+    restart: unless-stopped  # Add restart policy
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}  # Use environment variable
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Use environment variable
+      POSTGRES_DB: ${POSTGRES_DB}  # Use environment variable
+    ports:
+      - "5432:5432"  # Expose database on port 5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Persist database data
+    container_name: db_container  # Specify container name
+    restart: unless-stopped  # Add restart policy
+
+volumes:
+  pgdata:
