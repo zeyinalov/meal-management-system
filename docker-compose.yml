@@ -1,31 +1,30 @@
-version: '3.8'
-
 services:
+  db:
+    image: postgres:16.4
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   web:
     build: .
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - SECRET_KEY=${SECRET_KEY}
+    volumes:
+      - .:/app
     ports:
-      - "5000:5000"  # Expose Flask app on port 5000
-    env_file:
-      - .env
+      - "5000:5000"
     depends_on:
       - db
-    volumes:
-      - .:/app  # Mount local code into the container for easy development
-    container_name: web_container  # Specify container name
-    restart: unless-stopped  # Add restart policy
-
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}  # Use environment variable
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Use environment variable
-      POSTGRES_DB: ${POSTGRES_DB}  # Use environment variable
-    ports:
-      - "5432:5432"  # Expose database on port 5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data  # Persist database data
-    container_name: db_container  # Specify container name
-    restart: unless-stopped  # Add restart policy
 
 volumes:
-  pgdata:
+  postgres_data:

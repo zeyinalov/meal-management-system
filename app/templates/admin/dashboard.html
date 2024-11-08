@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Meal Management System{% endblock %}
+
+{% block content %}
+    <h1>Admin Dashboard</h1>
+    <a href="{{ url_for('admin.export_data') }}" class="btn">Export Data to Excel</a>
+    {% if meal_requests %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Breakfast</th>
+                    <th>Lunch</th>
+                    <th>Dinner</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in meal_requests %}
+                    <tr>
+                        <td>{{ request.id }}</td>
+                        <td>{{ request.user.username }}</td>
+                        <td>{{ request.user.email }}</td>
+                        <td>{{ request.date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ request.breakfast_quantity }}</td>
+                        <td>{{ request.lunch_quantity }}</td>
+                        <td>{{ request.dinner_quantity }}</td>
+                        <td>{{ request.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No meal requests found.</p>
+    {% endif %}
+{% endblock %}

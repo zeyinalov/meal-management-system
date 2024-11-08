@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}My Meal Requests - Meal Management System{% endblock %}
+
+{% block content %}
+    <h1>My Meal Requests</h1>
+    {% if meal_requests %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Breakfast</th>
+                    <th>Lunch</th>
+                    <th>Dinner</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in meal_requests %}
+                    <tr>
+                        <td>{{ request.date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ request.breakfast_quantity }}</td>
+                        <td>{{ request.lunch_quantity }}</td>
+                        <td>{{ request.dinner_quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have not submitted any meal requests yet.</p>
+    {% endif %}
+{% endblock %}

@@ -1,21 +1,29 @@
 # Use the official Python image with the desired version
 FROM python:3.9-slim
 
+# Update the package list and install git and other dependencies
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy the requirements file and install dependencies
-COPY requirements.txt requirements.txt
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the container
+# Copy the rest of the application code
 COPY . .
 
-# Set the environment variable to prevent Python from buffering stdout/stderr
+# Copy the entrypoint script
+COPY entrypoint.sh .
+
+# Set environment variables
 ENV PYTHONUNBUFFERED=1
+ENV FLASK_APP=app:create_app
+ENV FLASK_ENV=production
 
-# Add a health check to ensure the application is running
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl --fail http://localhost:5000 || exit 1
+# Expose port 5000
+EXPOSE 5000
 
-# Define default command to run the application
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Define the default command to run the entrypoint script
+ENTRYPOINT ["./entrypoint.sh"]

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Meal Request - Meal Management System{% endblock %}
+
+{% block content %}
+    <h1>Submit Meal Request</h1>
+    <form action="{{ url_for('meal.submit_request') }}" method="POST">
+        <label for="date">Date:</label>
+        <input type="date" name="date" id="date" required>
+
+        <label for="breakfast">Breakfast Quantity:</label>
+        <input type="number" name="breakfast" id="breakfast" min="0" required>
+
+        <label for="lunch">Lunch Quantity:</label>
+        <input type="number" name="lunch" id="lunch" min="0" required>
+
+        <label for="dinner">Dinner Quantity:</label>
+        <input type="number" name="dinner" id="dinner" min="0" required>
+
+        <button type="submit">Submit Request</button>
+    </form>
+{% endblock %}
